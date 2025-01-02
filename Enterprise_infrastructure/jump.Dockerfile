@@ -31,10 +31,12 @@ RUN id -u jump &>/dev/null || useradd -m jump
 EXPOSE 22
 
 # Set the health check to run every hour using a ping command and send an email if it fails
-HEALTHCHECK --interval=1h CMD ping -c 1 8.8.8.8 || (echo "Health check failed" | mail -s "Health Check Alert" jump@example.com)
+HEALTHCHECK --interval=1h CMD ping -c 1 8.8.8.8 || (echo "[server_status] Health check failed" | mail -s "Health Check Alert" jump@example.com)
 
 # Start the SSH and Postfix services
 CMD /bin/sh -c "service postfix start && /usr/sbin/sshd -D"
 
 # Set the default shell 
 SHELL ["/bin/sh", "-c"]
+# Send an email to user 'jump' with the start date and time
+RUN echo "Serverul Jump a pornit la data $(date '+%d.%m.%Y %H:%M:%S')." | mail -s "[server_status] Started" jump@example.com
