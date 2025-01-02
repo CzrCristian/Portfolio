@@ -1,3 +1,15 @@
+#----------------------------------------------------------
+# This file contains the Terraform code to create the 
+# Docker containers and networks for the enterprise 
+# infrastructure.
+#----------------------------------------------------------
+# The Terraform code in this file creates the following
+# resources:
+
+#----------------------------------------------------------
+# - A provider resouces
+#----------------------------------------------------------
+
 terraform {
     required_providers {
         docker = {
@@ -11,6 +23,11 @@ provider "docker" {
     host = "npipe:////./pipe/docker_engine" # For Windows
 }
 
+#----------------------------------------------------------
+# - Network resources
+#----------------------------------------------------------
+#                   jump_net network
+#----------------------------------------------------------
 resource "docker_network" "jump_net" {
     name = "jump-net"
     internal = false
@@ -20,6 +37,9 @@ resource "docker_network" "jump_net" {
     }
 }
 
+#----------------------------------------------------------
+#                   enterprise_net network
+#----------------------------------------------------------
 resource "docker_network" "enterprise_net" {
     name = "enterprise-net"
     internal = true
@@ -29,6 +49,9 @@ resource "docker_network" "enterprise_net" {
     }
 }
 
+#----------------------------------------------------------
+# - Dockerfile resources
+#----------------------------------------------------------
 resource "docker_image" "jump_image" {
     name = "jump:latest"
     build {
@@ -36,6 +59,12 @@ resource "docker_image" "jump_image" {
       dockerfile = "jump.Dockerfile"
     }
 }
+
+#----------------------------------------------------------
+# - Container resources
+#----------------------------------------------------------
+#                   Jump container
+#----------------------------------------------------------
 
 resource "docker_container" "jump" {
     name  = "jump"
@@ -62,6 +91,9 @@ resource "docker_container" "jump" {
         docker_image.jump_image
     ]
 }
+#----------------------------------------------------------
+#                     Ubuntu container
+#----------------------------------------------------------
 
 resource "docker_container" "ubuntu" {
     name  = "enterprise-ubuntu"
@@ -78,3 +110,4 @@ resource "docker_container" "ubuntu" {
         docker_network.enterprise_net
     ]
 }
+#----------------------------------------------------------
