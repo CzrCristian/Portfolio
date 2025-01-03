@@ -14,8 +14,11 @@ This repository provides setup instructions for running a Docker container as a 
 Before you begin, ensure you have the following tools installed on your machine:
 - Docker
 - Terraform
+- Vagrant
+- Kubernetes
 
 ## Docker Setup
+If you want to run one or more Docker containers independently of the full infrastructure, use the following commands:
 
 To build and run the jump container:
 
@@ -47,6 +50,14 @@ To initialize and apply the Terraform configuration:
     ```bash
     terraform apply
     ```
+3. Destroy the Terraform configuration:
+    ```bash
+    terraform destroy
+    ```
+4. Restart the Terraform configuration in one line command:
+    ```bash
+    terraform destroy -auto-approve; terraform init; terraform plan; terraform apply -auto-approve
+    ```
 
 ## Network Configuration
 
@@ -63,7 +74,7 @@ The following network addresses and IPs are used in this setup:
 
 | Host      | IP Address        | SSH       |
 |-----------|-------------------|-----------|
-| jump      | HOST_MACHINE      | 27022     |
+| jump      | LOCALHOST_MACHINE | 27022     |
 |           | 192.168.1.2       | 22        |
 |           | 10.1.1.2          | 22        |
 | ubuntu    | 10.1.1.3          |           |
