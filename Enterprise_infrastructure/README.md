@@ -54,15 +54,16 @@ The following network addresses and IPs are used in this setup:
 
 ### Network Addr Table
 
-| Network Name         | IP Address        |
-|----------------------|-------------------|
-| jump-net             | 192.168.1.1       |
-| enterprise_net       | 10.1.1.0          |
+| Network Name          | IP Address        |
+|-----------------------|-------------------|
+| jump-net              | 192.168.1.1       |
+| enterprise_net        | 10.1.1.0          |
 
 ### Network IP-Address Mapping
 
-| Host    | IP Address      |
-|---------|-----------------|
-| jump    | 192.168.1.2     |
-|         | 10.1.1.2        |
-| ubuntu  | 10.1.1.3        |
+| Host      | IP Address        | SSH       |
+|-----------|-------------------|-----------|
+| jump      | HOST_MACHINE      | 27022     |
+|           | 192.168.1.2       | 22        |
+|           | 10.1.1.2          | 22        |
+| ubuntu    | 10.1.1.3          |           |
