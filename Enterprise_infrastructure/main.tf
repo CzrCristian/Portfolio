@@ -69,6 +69,11 @@ resource "docker_container" "jump" {
     name  = "jump"
     image = docker_image.jump_image.name
 
+    ports {
+            internal = 22
+            external = 27022
+        }
+
     networks_advanced {
         name = docker_network.jump_net.name
         ipv4_address = "192.168.1.2"
@@ -79,7 +84,7 @@ resource "docker_container" "jump" {
         ipv4_address = "10.1.1.2"
     }
     privileged = true
-    entrypoint = ["/bin/bash", "-c", "while true; do sleep 3600; done"]
+    #entrypoint = ["/bin/bash", "-c", ""]
     provisioner "local-exec" {
         command = "docker cp jump-proxy.sh ${self.name}:/root/jump-proxy.sh && docker exec ${self.name} bash /root/jump-proxy.sh"
     }
