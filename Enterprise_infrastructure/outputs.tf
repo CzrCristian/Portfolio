@@ -18,3 +18,11 @@ output "enterprise_ubuntu_ip" {
     network.ipv4_address if network.name == "enterprise-net"
   ][0]
 }
+
+output "enterprise_nginx_ip" {
+  value = [
+    for network in docker_container.nginx.networks_advanced :
+    network.ipv4_address if network.name == "enterprise-net"
+  ][0]
+}
+

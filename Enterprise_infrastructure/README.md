@@ -72,9 +72,9 @@ The following network addresses and IPs are used in this setup:
 
 ### Network IP-Address Mapping
 
-| Host      | IP Address        | SSH       |
-|-----------|-------------------|-----------|
-| jump      | LOCALHOST_MACHINE | 27022     |
-|           | 192.168.1.2       | 22        |
-|           | 10.1.1.2          | 22        |
-| ubuntu    | 10.1.1.3          |           |
+| Host      | IP Address        | SSH       | User          | Password          |
+|-----------|-------------------|-----------|---------------|-------------------|
+| jump      | LOCALHOST_MACHINE | 27022     | jump          | -||-              |
+|           | 192.168.1.2       | 22        |               |                   |
+|           | 10.1.1.2          | 22        |               |                   |
+| ubuntu    | 10.1.1.3          |           | ubuntu        | -||-              |

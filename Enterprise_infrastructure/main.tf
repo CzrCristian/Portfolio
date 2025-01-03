@@ -6,6 +6,12 @@
 # The Terraform code in this file creates the following
 # resources:
 #----------------------------------------------------------
+# - A local variables
+#----------------------------------------------------------
+locals {
+    root_path = "/${replace(abspath(path.root), ":", "")}"
+}
+#----------------------------------------------------------
 # - A provider resouces
 #----------------------------------------------------------
 
@@ -70,9 +76,19 @@ resource "docker_container" "jump" {
     image = docker_image.jump_image.name
 
     ports {
-            internal = 22
-            external = 27022
-        }
+        internal = 22
+        external = 27022
+    }
+
+    ports {
+        internal = 80
+        external = 27080
+    }
+
+    ports {
+        internal = 443
+        external = 27443
+    }
 
     networks_advanced {
         name = docker_network.jump_net.name
@@ -85,9 +101,20 @@ resource "docker_container" "jump" {
     }
     privileged = true
     #entrypoint = ["/bin/bash", "-c", ""]
-    provisioner "local-exec" {
-        command = "docker cp jump-proxy.sh ${self.name}:/root/jump-proxy.sh && docker exec ${self.name} bash /root/jump-proxy.sh"
+
+    volumes {
+        container_path  = "/home/jump/scripts"
+        host_path       = "${local.root_path}/Data/Jump/scripts"
+        read_only       = true
     }
+
+    provisioner "local-exec" {
+        command = "docker exec ${self.name} bash /home/jump/scripts/jump-proxy.sh"
+    }
+
+    #provisioner "local-exec" {
+    #    command = "docker cp ${path.module}/Data/Jump/scripts/jump-proxy.sh ${self.name}:/home/jump/scripts/jump-proxy.sh && docker exec ${self.name} bash /home/jump/scripts/jump-proxy.sh"
+    #}
 
     depends_on = [
         docker_network.enterprise_net,
@@ -95,6 +122,7 @@ resource "docker_container" "jump" {
         docker_image.jump_image
     ]
 }
+
 #----------------------------------------------------------
 #                     Ubuntu container
 #----------------------------------------------------------
@@ -106,6 +134,36 @@ resource "docker_container" "ubuntu" {
     networks_advanced {
         name = docker_network.enterprise_net.name
         ipv4_address = "10.1.1.3"
+    }
+
+    entrypoint = ["/bin/bash", "-c", "while true; do sleep 3600; done"]
+
+    depends_on = [
+        docker_network.enterprise_net
+    ]
+}
+
+#----------------------------------------------------------
+#                     Nginx container
+#----------------------------------------------------------
+
+resource "docker_container" "nginx" {
+    name  = "nginx"
+    image = "nginx:latest"
+
+    networks_advanced {
+        name = docker_network.enterprise_net.name
+        ipv4_address = "10.1.1.4"
+    }
+
+    #volumes {
+    #    container_path  = "/etc/nginx"
+    #    host_path       = "${path.module}/Data/Nginx/nginx"
+    #    read_only       = true
+    #}
+
+    provisioner "local-exec" {
+        command = "docker exec ${self.name} bash service nginx start"
     }
 
     entrypoint = ["/bin/bash", "-c", "while true; do sleep 3600; done"]

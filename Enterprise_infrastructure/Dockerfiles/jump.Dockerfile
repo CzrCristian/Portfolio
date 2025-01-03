@@ -8,7 +8,7 @@ FROM ubuntu:latest
 SHELL ["/bin/sh", "-c"]
 
 # Install necessary packages
-RUN apt-get update && apt-get install -y iptables nano openssh-server
+RUN sudo apt-get update && sudo apt-get install -y iptables nano openssh-server iputils-ping net-tools nmap curl wget telnet dnsutils iproute2 iputils-tracepath traceroute tcpdump netcat
 
 # Add user 'jump' with password 'password'
 RUN useradd -m jump && echo "jump:password" | chpasswd
